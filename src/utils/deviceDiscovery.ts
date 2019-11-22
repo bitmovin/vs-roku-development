@@ -10,7 +10,7 @@ export class RokuDevice {
   // https://developer.roku.com/en-ca/docs/developer-program/debugging/external-control-api.md
   public static discover(): Promise<RokuDevice[]> {
     const client = new Client();
-    const devices: RokuDevice[] = vscode.workspace.getConfiguration().get('roku-development.devices') || [];
+    const devices: RokuDevice[] = RokuDevice.devicesFromConfig();
 
     client.on('response', async (headers, statusCode, rinfo) => {
       if (statusCode === 200 && headers.ST === 'roku:ecp' && !devices.some(dev => dev.ip === rinfo.address)) {
@@ -30,6 +30,11 @@ export class RokuDevice {
         resolve(devices);
       }, 5000);
     });
+  }
+
+  private static devicesFromConfig(): RokuDevice[] {
+    const config: any[] = vscode.workspace.getConfiguration().get('roku-development.devices') || [];
+    return config.map(obj => new RokuDevice(obj.ip, obj.name, obj.username, obj.password));
   }
 
   public getDeviceInfo(): Promise<any> {
