@@ -1,105 +1,128 @@
 {
-    "name": "roku-development",
-    "displayName": "Roku Development",
-    "description": "An extension for VS Code to debug and deploy Roku apps",
-    "version": "0.2.3",
-    "publisher": "fuzecc",
-    "icon": "icons/icon.png",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/adheus/vs-roku-development.git"
-    },
-    "engines": {
-        "vscode": "^1.28.0"
-    },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:roku.dev.deployAndDebug",
-        "onCommand:roku.dev.deploy",
-        "onCommand:roku.dev.debug"
-    ],
-    "main": "./out/extension",
-    "contributes": {
-        "configuration": {
-            "type": "object",
-            "title": "Roku configuration",
-            "properties": {
-                "roku-development.ip": {
-                    "type": [
-                        "string"
-                    ],
-                    "default": "192.168.0.46",
-                    "description": "Roku device IP address used for deployment."
-                },
-                "roku-development.username": {
-                    "type": [
-                        "string"
-                    ],
-                    "default": "rokudev",
-                    "description": "Roku device developer mode username"
-                },
-                "roku-development.password": {
-                    "type": [
-                        "string"
-                    ],
-                    "default": "",
-                    "description": "Roku device developer mode password"
-                },
-                "roku-development.dir": {
-                    "type": [
-                        "string"
-                    ],
-                    "default": "",
-                    "description": "Directory to deploy relative to workspace"
-                },
-                "roku-development.files": {
-                    "type": [
-                        "array"
-                    ],
-                    "default": [
-                        "manifest",
-                        "**/*.*"
-                    ],
-                    "description": "Array of files to pass in to roku-deploy"
-                }
-            }
-        },
-        "commands": [
-            {
-                "command": "roku.dev.deployAndDebug",
-                "title": "Deploy & Debug",
-                "category": "Roku"
-            },
-            {
-                "command": "roku.dev.deploy",
-                "title": "Deploy",
-                "category": "Roku"
-            },
-            {
-                "command": "roku.dev.debug",
-                "title": "Debug console",
-                "category": "Roku"
-            }
-        ]
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.21",
-        "tslint": "^5.8.0",
-        "@types/node": "^8.10.25",
-        "@types/mocha": "^2.2.42"
-    },
-    "dependencies": {
-        "axios": "^0.18.0",
-        "roku-deploy": "^2.0.0"
-    }
+	"name": "roku-development",
+	"displayName": "Roku Development",
+	"description": "An extension for VS Code to debug and deploy Roku apps",
+	"version": "0.2.3",
+	"publisher": "fuzecc",
+	"icon": "icons/icon.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/adheus/vs-roku-development.git"
+	},
+	"engines": {
+		"vscode": "^1.28.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:roku.dev.deployAndDebug",
+		"onCommand:roku.dev.deploy",
+		"onCommand:roku.dev.debug",
+		"onCommand:roku.dev.discover"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "Roku configuration",
+			"properties": {
+				"roku-development.ip": {
+					"type": [
+						"string"
+					],
+					"default": "192.168.0.46",
+					"description": "Roku device IP address used for deployment."
+				},
+				"roku-development.username": {
+					"type": [
+						"string"
+					],
+					"default": "rokudev",
+					"description": "Roku device developer mode username"
+				},
+				"roku-development.password": {
+					"type": [
+						"string"
+					],
+					"default": "",
+					"description": "Roku device developer mode password"
+				},
+				"roku-development.dir": {
+					"type": [
+						"string"
+					],
+					"default": "",
+					"description": "Directory to deploy relative to workspace"
+				},
+				"roku-development.files": {
+					"type": [
+						"array"
+					],
+					"default": [
+						"manifest",
+						"**/*.*"
+					],
+					"description": "Array of files to pass in to roku-deploy"
+				},
+				"roku-development.devices": {
+					"type": [
+						"array"
+					],
+					"default": [],
+					"description": "Array of devices discovered in the network"
+				}
+			}
+		},
+		"commands": [
+			{
+				"command": "roku.dev.deployAndDebug",
+				"title": "Deploy & Debug",
+				"category": "Roku"
+			},
+			{
+				"command": "roku.dev.deploy",
+				"title": "Deploy",
+				"category": "Roku"
+			},
+			{
+				"command": "roku.dev.debug",
+				"title": "Debug console",
+				"category": "Roku"
+			},
+			{
+				"command": "roku.dev.discover",
+				"title": "Discover Roku devices",
+				"category": "Roku"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^8.10.25",
+		"@types/node-ssdp": "^3.3.0",
+		"@types/xml2json": "^0.11.0",
+		"tslint": "^5.8.0",
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.21"
+	},
+	"dependencies": {
+		"axios": "^0.18.0",
+		"fast-xml-parser-ordered": "^3.12.22",
+		"node-ssdp": "^4.0.0",
+		"roku-deploy": "^2.0.0",
+		"xml2json": "^0.11.2"
+	},
+	"__metadata": {
+		"id": "78cc4505-cf4a-4a07-a27c-b52a181bfb17",
+		"publisherDisplayName": "Fuze",
+		"publisherId": "2425293b-c5b8-4a90-94e7-1da31b3604d2"
+	}
 }

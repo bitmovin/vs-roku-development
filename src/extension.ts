@@ -3,6 +3,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as RokuApi from './utils/rokuApi';
+import { RokuDevice } from './utils/deviceDiscovery';
 
 function deployApp() {
     vscode.window.showInformationMessage(`Deploying app to ${RokuApi.getRokuDevice()}`);
@@ -32,6 +33,14 @@ function deployAndDebug() {
     deployApp();
 }
 
+function discoverDevices() {
+    // https://code.visualstudio.com/api/references/vscode-api#WorkspaceConfiguration
+    (async function() {
+        const devices = await RokuDevice.discover();
+        await vscode.workspace.getConfiguration().update('roku-development.devices', devices, vscode.ConfigurationTarget.Global);
+    })();
+}
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -43,15 +52,17 @@ export function activate(context: vscode.ExtensionContext) {
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
-    let deployDisposable = vscode.commands.registerCommand('roku.dev.deploy', deployApp);
+    const deployDisposable = vscode.commands.registerCommand('roku.dev.deploy', deployApp);
     context.subscriptions.push(deployDisposable);
 
-    let debugDisposable = vscode.commands.registerCommand('roku.dev.debug', launchDebug);
+    const debugDisposable = vscode.commands.registerCommand('roku.dev.debug', launchDebug);
     context.subscriptions.push(debugDisposable);
 
-    let deployAndDebugDisposable = vscode.commands.registerCommand('roku.dev.deployAndDebug', deployAndDebug);
+    const deployAndDebugDisposable = vscode.commands.registerCommand('roku.dev.deployAndDebug', deployAndDebug);
     context.subscriptions.push(deployAndDebugDisposable);
 
+    const discoverDisposable = vscode.commands.registerCommand('roku.dev.discover', discoverDevices);
+    context.subscriptions.push(discoverDisposable);
 }
 
 // this method is called when your extension is deactivated
