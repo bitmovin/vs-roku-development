@@ -19,7 +19,8 @@
 		"onCommand:roku.dev.deployAndDebug",
 		"onCommand:roku.dev.deploy",
 		"onCommand:roku.dev.debug",
-		"onCommand:roku.dev.discover"
+		"onCommand:roku.dev.discover",
+		"onCommand:roku.dev.runTests"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -94,6 +95,11 @@
 				"command": "roku.dev.discover",
 				"title": "Discover Roku devices",
 				"category": "Roku"
+			},
+			{
+				"command": "roku.dev.runTests",
+				"title": "Run unit tests",
+				"category": "Roku"
 			}
 		]
 	},
@@ -108,6 +114,8 @@
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^8.10.25",
 		"@types/node-ssdp": "^3.3.0",
+		"@types/request": "^2.48.3",
+		"@types/request-promise": "^4.1.45",
 		"@types/xml2json": "^0.11.0",
 		"tslint": "^5.8.0",
 		"typescript": "^2.6.1",
@@ -117,6 +125,8 @@
 		"axios": "^0.18.0",
 		"fast-xml-parser-ordered": "^3.12.22",
 		"node-ssdp": "^4.0.0",
+		"request": "^2.88.0",
+		"request-promise": "^4.2.5",
 		"roku-deploy": "^2.0.0",
 		"xml2json": "^0.11.2"
 	},

@@ -35,9 +35,40 @@ function deployAndDebug() {
 
 function discoverDevices() {
     // https://code.visualstudio.com/api/references/vscode-api#WorkspaceConfiguration
-    (async function() {
+    (async function () {
         const devices = await RokuDevice.discover();
         await vscode.workspace.getConfiguration().update('roku-development.devices', devices, vscode.ConfigurationTarget.Global);
+    })();
+}
+
+function runTests() {
+    (async function () {
+        const deviceAvailability = await Promise.all(RokuDevice.devicesFromConfig()
+            .map(device => device.isAvailable().then(isAvailable => ({ device, isAvailable }))));
+
+        const devices = deviceAvailability
+            .filter(({ isAvailable }) => isAvailable)
+            .map(({ device }) => ({ label: device.name, description: `IP: ${device.ip}`, device }));
+
+        if (!devices.length) {
+            vscode.window.showInformationMessage('No Roku device available');
+            return;
+        }
+
+        // TODO: dsfdf
+        const selection = await vscode.window.showQuickPick(devices, { placeHolder: 'Select the device to run the tests on' });
+
+        if (!selection) {
+            vscode.window.showInformationMessage('No device selected');
+            return;
+        }
+        // const device = devices[0].device;
+        const device = selection.device;
+
+        await device.sendHomeKey();
+        await device.removeFiles();
+        await device.sendFile('/../../data/BitmovinTest.zip');
+        await device.sendHomeKey();
     })();
 }
 
@@ -63,6 +94,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     const discoverDisposable = vscode.commands.registerCommand('roku.dev.discover', discoverDevices);
     context.subscriptions.push(discoverDisposable);
+
+    const runTestsDisposable = vscode.commands.registerCommand('roku.dev.runTests', runTests);
+    context.subscriptions.push(runTestsDisposable);
 }
 
 // this method is called when your extension is deactivated
